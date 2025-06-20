@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './Map.css';
@@ -16,7 +16,7 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
   const [showValidResults, setShowValidResults] = useState(false);
 
   // تعريف جميع المتغيرات والثوابت التي تعتمد عليها useEffect في الأعلى
-  const lakeBounds = {
+  const lakeBounds = useMemo(() => ({
     Burullus: [
       [31.15, 30.30],
       [31.65, 31.35]
@@ -25,17 +25,17 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
       [30.90, 29.85],
       [31.42, 30.55]
     ]
-  };
+  }), []);
 
-  const ndtiBurullusBounds = [
+  const ndtiBurullusBounds = useMemo(() => [
     [31.170, 30.22],
     [31.600, 31.13]
-  ];
+  ], []);
 
-  const ndtiEdkuBounds = [
+  const ndtiEdkuBounds = useMemo(() => [
     [31.22804, 30.16827],
     [31.27157, 30.26174]
-  ];
+  ], []);
 
   const indexDescriptions = {
     NDVI: {
@@ -222,7 +222,7 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
     }
     // إذا لم يكن هناك اختيارات صالحة، لا تضف أي طبقة جديدة
     mapInstance.current.invalidateSize();
-  }, [selectedParameters, showResults, selectedLake, allSelectionsValid, lakeBounds, ndtiBurullusBounds]);
+  }, [selectedParameters, showResults, selectedLake, allSelectionsValid, lakeBounds, ndtiBurullusBounds, ndtiEdkuBounds]);
 
   // Update isFirstParameter when selectedParameters changes
   useEffect(() => {
@@ -235,7 +235,7 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
     setShowDetails(!showDetails);
   };
 
-  // Helper to check if ALL selections are default
+  // eslint-disable-next-line no-unused-vars
   const allSelectionsDefault =
     selectedLake === 'Select The Lake' &&
     selectedParameters.length > 0 &&
