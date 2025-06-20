@@ -1,0 +1,75 @@
+.map-controls-container {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 1000;
+  transition: all 0.3s ease-in-out;
+}
+
+.map-controls-container.hidden {
+  left: -225px;
+}
+
+.map-controls {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  flex-shrink: 0;
+}
+
+.parameter-selection {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.parameter-box {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.parameter-box select {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.parameter-box button {
+  width: 100%;
+  padding: 8px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.parameter-box button:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .map-controls-container {
+    left: 5px;
+  }
+  
+  .map-controls-container.hidden {
+    left: -180px;
+  }
+  
+  .map-controls {
+    width: 160px;
+    padding: 10px;
+  }
+} 
