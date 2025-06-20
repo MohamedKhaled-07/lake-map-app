@@ -7,6 +7,7 @@ import DetailsBox from './DetailsBox';
 import LegendToggleArrow from './LegendToggleArrow';
 
 const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake }) => {
+  // eslint-disable-next-line no-unused-vars
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const overlayRef = useRef(null);
