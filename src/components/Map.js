@@ -12,8 +12,10 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
   const overlayRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
+  const [isFirstParameter, setIsFirstParameter] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const [showValidResults, setShowValidResults] = useState(false);
+  const [hasShownResults, setHasShownResults] = useState(false);
 
   // Default bounds for both lakes
   const lakeBounds = {
@@ -116,14 +118,6 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
     }
   };
 
-  // Helper to check if all selections are valid (none are default)
-  const allSelectionsValid =
-    selectedLake !== 'Select The Lake' &&
-    selectedParameters.length > 0 &&
-    selectedParameters.every(
-      param => param.year && param.index && param.year !== 'Select Year' && param.index !== 'Select Index'
-    );
-
   // Initialize map and set up base layer
   useEffect(() => {
     if (!mapRef.current) return;
@@ -155,6 +149,7 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
       mapInstance.current.invalidateSize();
     }
 
+    // Fit bounds to selected lake using updated coordinates
     if (mapInstance.current && (selectedLake === 'Burullus' || selectedLake === 'Edku')) {
       mapInstance.current.fitBounds(lakeBounds[selectedLake]);
     }
@@ -165,7 +160,7 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
         mapInstance.current = null;
       }
     };
-  }, [selectedLake, lakeBounds]);
+  }, [selectedLake]);
 
   // Clear overlays if any select is set to default
   useEffect(() => {
@@ -227,12 +222,15 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
     }
     // إذا لم يكن هناك اختيارات صالحة، لا تضف أي طبقة جديدة
     mapInstance.current.invalidateSize();
-  }, [selectedParameters, showResults, selectedLake, allSelectionsValid, lakeBounds, ndtiBurullusBounds]);
+  }, [selectedParameters, showResults, selectedLake]);
 
   // Update isFirstParameter when selectedParameters changes
   useEffect(() => {
     if (selectedParameters.length === 1 && !hasShownWelcome) {
+      setIsFirstParameter(true);
       setHasShownWelcome(true);
+    } else {
+      setIsFirstParameter(false);
     }
   }, [selectedParameters, hasShownWelcome]);
 
@@ -240,13 +238,33 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
     setShowDetails(!showDetails);
   };
 
+  // Helper to check if ALL selections are default
+  const allSelectionsDefault =
+    selectedLake === 'Select The Lake' &&
+    selectedParameters.length > 0 &&
+    selectedParameters.every(
+      param =>
+        (!param.year || param.year === 'Select Year') &&
+        (!param.index || param.index === 'Select Index')
+    );
+
+  // Helper to check if all selections are valid (none are default)
+  const allSelectionsValid =
+    selectedLake !== 'Select The Lake' &&
+    selectedParameters.length > 0 &&
+    selectedParameters.every(
+      param => param.year && param.index && param.year !== 'Select Year' && param.index !== 'Select Index'
+    );
+
   // Show details box only when user clicks the toggle button after Show Results
   useEffect(() => {
     if (showResults && allSelectionsValid) {
       setShowValidResults(true);
+      setHasShownResults(true);
       setShowDetails(false); // Keep details box hidden initially
     } else {
       setShowValidResults(false);
+      setHasShownResults(false);
       setShowDetails(false);
     }
   }, [showResults, allSelectionsValid]);
