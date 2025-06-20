@@ -321,7 +321,6 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
           showLegend={showLegend} 
           toggleLegend={toggleLegend} 
         />
-
         {showValidResults && currentIndex && (
         <div className="legend">
           <h3>{currentIndex}</h3>
