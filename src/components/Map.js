@@ -12,36 +12,29 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
   const overlayRef = useRef(null);
   const [showDetails, setShowDetails] = useState(false);
   const [showLegend, setShowLegend] = useState(false);
-  const [isFirstParameter, setIsFirstParameter] = useState(false);
   const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const [showValidResults, setShowValidResults] = useState(false);
-  const [hasShownResults, setHasShownResults] = useState(false);
 
-  // Default bounds for both lakes
+  // تعريف جميع المتغيرات والثوابت التي تعتمد عليها useEffect في الأعلى
   const lakeBounds = {
-    // Burullus Lake bounds
     Burullus: [
-      [31.15, 30.30],  // Southwest corner (bottom-left)
-      [31.65, 31.35]   // Northeast corner (top-right)
+      [31.15, 30.30],
+      [31.65, 31.35]
     ],
-    
-    // Edku Lake bounds
     Edku: [
-      [30.90, 29.85],  // Southwest corner (bottom-left)
-      [31.42, 30.55]   // Northeast corner (top-right)
+      [30.90, 29.85],
+      [31.42, 30.55]
     ]
   };
 
-  // Special bounds for NDTI index in Burullus region
   const ndtiBurullusBounds = [
-    [31.170, 30.22], // south, west
-    [31.600, 31.13]  // north, east
+    [31.170, 30.22],
+    [31.600, 31.13]
   ];
 
-  // Special bounds for NDTI index in Edku region
   const ndtiEdkuBounds = [
-    [31.22804, 30.16827],  // Southwest corner (bottom-left)
-    [31.27157, 30.26174]   // Northeast corner (top-right)
+    [31.22804, 30.16827],
+    [31.27157, 30.26174]
   ];
 
   const indexDescriptions = {
@@ -118,6 +111,13 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
     }
   };
 
+  const allSelectionsValid =
+    selectedLake !== 'Select The Lake' &&
+    selectedParameters.length > 0 &&
+    selectedParameters.every(
+      param => param.year && param.index && param.year !== 'Select Year' && param.index !== 'Select Index'
+    );
+
   // Initialize map and set up base layer
   useEffect(() => {
     if (!mapRef.current) return;
@@ -160,7 +160,7 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
         mapInstance.current = null;
       }
     };
-  }, [selectedLake]);
+  }, [selectedLake, lakeBounds]);
 
   // Clear overlays if any select is set to default
   useEffect(() => {
@@ -222,15 +222,12 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
     }
     // إذا لم يكن هناك اختيارات صالحة، لا تضف أي طبقة جديدة
     mapInstance.current.invalidateSize();
-  }, [selectedParameters, showResults, selectedLake]);
+  }, [selectedParameters, showResults, selectedLake, allSelectionsValid, lakeBounds, ndtiBurullusBounds]);
 
   // Update isFirstParameter when selectedParameters changes
   useEffect(() => {
     if (selectedParameters.length === 1 && !hasShownWelcome) {
-      setIsFirstParameter(true);
       setHasShownWelcome(true);
-    } else {
-      setIsFirstParameter(false);
     }
   }, [selectedParameters, hasShownWelcome]);
 
@@ -248,23 +245,13 @@ const Map = ({ selectedParameters, onParameterChange, showResults, selectedLake 
         (!param.index || param.index === 'Select Index')
     );
 
-  // Helper to check if all selections are valid (none are default)
-  const allSelectionsValid =
-    selectedLake !== 'Select The Lake' &&
-    selectedParameters.length > 0 &&
-    selectedParameters.every(
-      param => param.year && param.index && param.year !== 'Select Year' && param.index !== 'Select Index'
-    );
-
   // Show details box only when user clicks the toggle button after Show Results
   useEffect(() => {
     if (showResults && allSelectionsValid) {
       setShowValidResults(true);
-      setHasShownResults(true);
       setShowDetails(false); // Keep details box hidden initially
     } else {
       setShowValidResults(false);
-      setHasShownResults(false);
       setShowDetails(false);
     }
   }, [showResults, allSelectionsValid]);
