@@ -1,17 +1,20 @@
 .map-wrapper {
   position: relative;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  min-height: 300px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .map-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
+  position: relative;
+  width: 100vw;
   height: 100%;
+  min-height: 200px;
   z-index: 1;
+  flex: 1;
 }
 
 .details-container {
@@ -178,6 +181,11 @@
   gap: 5px;
   z-index: 1000;
   transition: all 0.3s ease-in-out;
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 8px 10px;
+  max-width: 220px;
 }
 
 .legend-container.hidden {
@@ -252,28 +260,38 @@
 
 /* Responsive Styles */
 @media (max-width: 768px) {
-  .legend-container {
-    right: 0;
+  .map-wrapper {
+    height: 45vh;
+    min-height: 200px;
   }
-  
+  .map-container {
+    height: 100%;
+    min-height: 200px;
+    width: 100vw;
+  }
+  .legend-container {
+    top: auto;
+    bottom: 60px;
+    right: 10px;
+    left: auto;
+    max-width: 90vw;
+    z-index: 1000;
+    transition: bottom 0.3s, right 0.3s;
+  }
   .legend-container.hidden {
     right: -180px;
   }
-  
   .legend {
     width: 160px;
     padding: 10px;
   }
-  
   .details-content {
     flex-direction: column;
     gap: 10px;
   }
-  
   .parameter-details {
     min-width: 100%;
   }
-
   .vertical-divider {
     width: 80%;
     height: 2px;

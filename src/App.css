@@ -118,12 +118,14 @@ html, body, #root {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow-y: auto;
   z-index: 1000;
+  transition: left 0.3s, width 0.3s, max-height 0.3s;
 }
 
 .map-container {
   flex: 1;
   height: 100%;
   position: relative;
+  min-width: 0;
 }
 
 .map-container .map {
@@ -164,19 +166,57 @@ html, body, #root {
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) {
+  .controls-container {
+    width: 260px;
+    padding: 15px;
+  }
+}
+
 @media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+    height: 100dvh;
+  }
   .controls-container {
     position: fixed;
     top: auto;
     bottom: 0;
     left: 0;
-    transform: none;
-    width: 100%;
-    max-height: 50vh;
+    width: 100vw;
+    max-height: 55vh;
     border-radius: 12px 12px 0 0;
+    transform: none;
+    padding: 10px 5px 15px 5px;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.12);
+    transition: bottom 0.3s, max-height 0.3s;
   }
-
+  .controls-container.collapsed {
+    max-height: 40px;
+    overflow: hidden;
+    padding: 0 5px;
+  }
   .controls-container h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    margin: 0;
+    cursor: pointer;
+    user-select: none;
+    padding: 10px 0;
   }
+  .map-container {
+    height: 45vh;
+    min-height: 200px;
+    width: 100vw;
+  }
+}
+
+button, .legend-toggle-button, .details-toggle-button {
+  min-width: 44px;
+  min-height: 44px;
+  font-size: 1rem;
+  touch-action: manipulation;
+}
+
+select, input {
+  font-size: 1rem;
 }
